@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reel Shelf</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,800&display=swap">
+<style>
+:root{color-scheme:dark;--bg:#14121c;--surface:#1e1b2a;--line:#2e2a3d;--text:#efeaf6;--muted:#9d96b0;--accent:#f2b84b}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:400 16px/1.5 "DM Sans",system-ui,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:20px 16px 48px}
+h1{font:800 32px/1.1 Fraunces,Georgia,serif;margin:8px 0 4px}
+.sub{color:var(--muted);margin:0 0 20px}
+.search{width:100%;padding:14px 16px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--text);font:inherit}
+.search::placeholder{color:var(--muted)}
+.search:focus,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:8px;overflow-x:auto;padding:14px 0 4px;scrollbar-width:none}
+.row::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);font:inherit;font-size:14px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#1a1405;font-weight:700}
+.tabs{display:flex;gap:20px;border-bottom:1px solid var(--line);margin:18px 0}
+.tab{background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);font:500 16px "DM Sans",sans-serif;padding:10px 0;cursor:pointer}
+.tab[aria-selected="true"]{color:var(--text);border-bottom-color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(min-width:620px){.grid{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--surface);border-radius:14px;overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column}
+.poster{position:relative;aspect-ratio:2/3;display:flex;flex-direction:column;justify-content:flex-end;padding:14px;color:#fff}
+.poster b{font:800 22px/1.05 Fraunces,Georgia,serif;text-shadow:0 2px 12px rgba(0,0,0,.45)}
+.poster span{font-size:13px;opacity:.85;margin-top:6px}
+.save{position:absolute;top:10px;right:10px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(20,18,28,.62);color:#fff;font-size:20px;cursor:pointer;display:grid;place-items:center}
+.save[aria-pressed="true"]{background:var(--accent);color:#1a1405}
+.info{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.info h2{font:700 15px/1.3 "DM Sans",sans-serif;margin:0}
+.meta{display:flex;justify-content:space-between;color:var(--muted);font-size:13px}
+.blurb{margin:0;color:var(--muted);font-size:13px;line-height:1.4}
+.lic{font-size:12px;color:var(--muted)}
+.play{margin-top:auto;display:block;width:100%;padding:10px 0;text-align:center;border-radius:10px;border:0;background:var(--accent);color:#1a1405;text-decoration:none;font:700 14px "DM Sans",sans-serif;cursor:pointer}
+.empty{text-align:center;color:var(--muted);padding:56px 12px}
+.empty b{display:block;color:var(--text);font:600 20px Fraunces,Georgia,serif;margin-bottom:6px}
+.note{margin-top:32px;padding:16px;border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:13px;line-height:1.55;max-width:70ch}
+.note b{color:var(--text)}
+.modal{position:fixed;inset:0;background:rgba(8,7,12,.92);display:none;flex-direction:column;justify-content:center;padding:16px;z-index:10}
+.modal.open{display:flex}
+.modal video{width:100%;max-height:70vh;background:#000;border-radius:12px}
+.mbar{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;max-width:900px;width:100%;margin:0 auto 12px}
+.mwrap{max-width:900px;width:100%;margin:0 auto}
+.mbar h3{font:800 20px Fraunces,Georgia,serif;margin:0}
+.close{flex:none;padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--text);font:500 14px "DM Sans",sans-serif;cursor:pointer}
+.credit{color:var(--muted);font-size:13px;margin:10px 0 0}
+.credit a{color:var(--accent)}
+.err{color:#ff9d8a;font-size:14px;margin:10px 0 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Reel Shelf</h1>
+  <p class="sub">Free films you can legally watch. Find one, save it for later.</p>
+  <input id="q" class="search" type="search" placeholder="Search by title" aria-label="Search films" autocomplete="off">
+  <div class="row" id="genres" role="group" aria-label="Filter by genre"></div>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="t-all" aria-selected="true">All films</button>
+    <button class="tab" role="tab" id="t-list" aria-selected="false">Watchlist (<span id="n">0</span>)</button>
+  </div>
+  <div id="out" class="grid"></div>
+  <div class="note">
+    <b>About these films.</b> Every film here is released by its makers under a Creative Commons Attribution (CC BY) licence, which allows free viewing and sharing as long as the creators are credited. Credit goes to the Blender Foundation / Blender Studio, and it is shown with every film. This is not legal advice. Check each film's licence version on its official page before a public launch.
+  </div>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
+  <div class="mwrap">
+    <div class="mbar"><h3 id="mt"></h3><button class="close" id="close">Close</button></div>
+    <video id="vid" controls playsinline preload="none"></video>
+    <p class="credit" id="mc"></p>
+    <p class="err" id="me" hidden>This film could not load. Check your connection and try again.</p>
+  </div>
+</div>
+
+<script>
+// v = direct video file. Cosmos Laundromat and Spring have no direct file yet, so they open the official page.
+const B="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/";
+const FILMS=[
+ {id:1,t:"Big Buck Bunny",y:2008,m:10,g:"Comedy",lic:"CC BY 3.0",cr:"© Blender Foundation | bigbuckbunny.org",u:"https://peach.blender.org/",v:B+"BigBuckBunny.mp4",d:"A giant rabbit gets even with three bullying rodents.",c:["#2f5d3a","#a8c66c"]},
+ {id:2,t:"Sintel",y:2010,m:15,g:"Fantasy",lic:"CC BY",cr:"© Blender Foundation | sintel.org",u:"https://durian.blender.org/",v:B+"Sintel.mp4",d:"A young woman searches for the baby dragon she befriended.",c:["#5a2a3b","#e08a5c"]},
+ {id:3,t:"Tears of Steel",y:2012,m:12,g:"Sci-Fi",lic:"CC BY 3.0",cr:"(CC) Blender Foundation | tearsofsteel.org",u:"https://mango.blender.org/",v:B+"TearsOfSteel.mp4",d:"Scientists in Amsterdam try to stop a robot invasion. Live action with CGI.",c:["#12263a","#3a86a8"]},
+ {id:4,t:"Elephants Dream",y:2006,m:11,g:"Sci-Fi",lic:"CC BY",cr:"© Blender Foundation | elephantsdream.org",u:"https://orange.blender.org/",v:B+"ElephantsDream.mp4",d:"Two men explore a strange machine world. The first open movie.",c:["#3a1f4a","#b36bd0"]},
+ {id:5,t:"Cosmos Laundromat",y:2015,m:12,g:"Fantasy",lic:"CC BY",cr:"(CC) Blender Foundation | studio.blender.org",u:"https://studio.blender.org/films/",v:null,d:"A lonely sheep is offered a new life by a mysterious salesman.",c:["#1c2a5a","#f0a04b"]},
+ {id:6,t:"Spring",y:2019,m:8,g:"Fantasy",lic:"CC BY 4.0",cr:"(CC) Blender Foundation | studio.blender.org",u:"https://studio.blender.org/films/",v:null,d:"A shepherd girl and her dog face the spirits of the mountain.",c:["#2c6b5a","#e8d26b"]}
+];
+let saved=new Set(),genre="All",tab="all",term="";
+try{saved=new Set(JSON.parse(localStorage.getItem("reelshelf-site")||"[]"))}catch(e){}
+function persist(){try{localStorage.setItem("reelshelf-site",JSON.stringify([...saved]))}catch(e){}}
+const $=s=>document.querySelector(s), vid=$("#vid");
+const genres=["All",...new Set(FILMS.map(f=>f.g))];
+$("#genres").innerHTML=genres.map(g=>`<button class="chip" aria-pressed="${g===genre}" data-g="${g}">${g}</button>`).join("");
+$("#genres").onclick=e=>{const b=e.target.closest("[data-g]");if(!b)return;genre=b.dataset.g;
+  document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",c.dataset.g===genre));render()};
+$("#q").oninput=e=>{term=e.target.value.trim().toLowerCase();render()};
+function setTab(t){tab=t;$("#t-all").setAttribute("aria-selected",t==="all");$("#t-list").setAttribute("aria-selected",t==="list");render()}
+$("#t-all").onclick=()=>setTab("all");$("#t-list").onclick=()=>setTab("list");
+function render(){
+  $("#n").textContent=saved.size;
+  const list=FILMS.filter(f=>(tab==="all"||saved.has(f.id))&&(genre==="All"||f.g===genre)&&f.t.toLowerCase().includes(term));
+  if(!list.length){
+    $("#out").className="";
+    $("#out").innerHTML=tab==="list"&&!saved.size
+      ?`<div class="empty"><b>Your watchlist is empty</b>Tap + on any film to save it here.</div>`
+      :`<div class="empty"><b>No films found</b>Try a different title or clear the genre filter.</div>`;
+    return;
+  }
+  $("#out").className="grid";
+  $("#out").innerHTML=list.map(f=>`
+   <article class="card">
+    <div class="poster" style="background:linear-gradient(160deg,${f.c[0]},${f.c[1]})">
+      <button class="save" data-id="${f.id}" aria-pressed="${saved.has(f.id)}" aria-label="${saved.has(f.id)?"Remove from":"Add to"} watchlist: ${f.t}">${saved.has(f.id)?"✓":"+"}</button>
+      <b>${f.t}</b><span>${f.y}</span>
+    </div>
+    <div class="info"><h2>${f.t}</h2>
+      <div class="meta"><span>${f.g}</span><span>${f.m} min</span></div>
+      <p class="blurb">${f.d}</p>
+      <div class="lic">${f.lic} · Blender Foundation</div>
+      ${f.v?`<button class="play" data-play="${f.id}">Play film</button>`
+           :`<a class="play" href="${f.u}" target="_blank" rel="noopener">Watch on official page</a>`}
+    </div>
+   </article>`).join("");
+}
+$("#out").onclick=e=>{
+  const s=e.target.closest(".save");
+  if(s){const id=+s.dataset.id;saved.has(id)?saved.delete(id):saved.add(id);persist();render();return}
+  const p=e.target.closest("[data-play]");
+  if(p){const f=FILMS.find(x=>x.id===+p.dataset.play);openPlayer(f)}
+};
+function openPlayer(f){
+  $("#mt").textContent=f.t;
+  $("#mc").innerHTML=`${f.cr} · ${f.lic} · <a href="${f.u}" target="_blank" rel="noopener">Official page</a>`;
+  $("#me").hidden=true;
+  vid.src=f.v;
+  $("#modal").classList.add("open");
+  vid.play().catch(()=>{});
+  $("#close").focus();
+}
+function closePlayer(){vid.pause();vid.removeAttribute("src");vid.load();$("#modal").classList.remove("open")}
+vid.addEventListener("error",()=>{if(vid.getAttribute("src"))$("#me").hidden=false});
+$("#close").onclick=closePlayer;
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closePlayer()});
+render();
+</script>
+</body>
+</html>
