@@ -26,6 +26,9 @@ h1{font:800 32px/1.1 Fraunces,Georgia,serif;margin:8px 0 4px}
 @media(min-width:620px){.grid{grid-template-columns:repeat(3,1fr)}}
 .card{background:var(--surface);border-radius:14px;overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column}
 .poster{position:relative;aspect-ratio:2/3;display:flex;flex-direction:column;justify-content:flex-end;padding:14px;color:#fff}
+.pimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.poster.has b,.poster.has span{display:none}
+.save{z-index:2}
 .poster b{font:800 22px/1.05 Fraunces,Georgia,serif;text-shadow:0 2px 12px rgba(0,0,0,.45)}
 .poster span{font-size:13px;opacity:.85;margin-top:6px}
 .save{position:absolute;top:10px;right:10px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(20,18,28,.62);color:#fff;font-size:20px;cursor:pointer;display:grid;place-items:center}
@@ -61,10 +64,11 @@ h1{font:800 32px/1.1 Fraunces,Georgia,serif;margin:8px 0 4px}
   <div class="tabs" role="tablist">
     <button class="tab" role="tab" id="t-all" aria-selected="true">All films</button>
     <button class="tab" role="tab" id="t-list" aria-selected="false">Watchlist (<span id="n">0</span>)</button>
+    <button class="tab" role="tab" id="t-stats" aria-selected="false">Stats</button>
   </div>
   <div id="out" class="grid"></div>
   <div class="note">
-    <b>About these films.</b> Every film here is released by its makers under a Creative Commons Attribution (CC BY) licence, which allows free viewing and sharing as long as the creators are credited. Credit goes to the Blender Foundation / Blender Studio, and it is shown with every film. Videos stream from Wikimedia Commons. This is not legal advice. Check each film's licence version on its official page before a public launch.
+    <b>About these films.</b> Every film here is released by its makers under a Creative Commons Attribution (CC BY) licence, which allows free viewing and sharing as long as the creators are credited. Credit goes to the Blender Foundation / Blender Studio, and it is shown with every film. Videos and cover images load from Wikimedia Commons. This is not legal advice. Check each film's licence version on its official page before a public launch.
   </div>
 </div>
 
@@ -82,13 +86,21 @@ h1{font:800 32px/1.1 Fraunces,Georgia,serif;margin:8px 0 4px}
 const W="https://upload.wikimedia.org/wikipedia/commons/transcoded/";
 const S=(p,f)=>["480p.vp9.webm","360p.vp9.webm","720p.vp9.webm","360p.webm"].map(q=>W+p+"/"+f+"/"+f+"."+q);
 const FILMS=[
- {id:1,t:"Big Buck Bunny",y:2008,m:10,g:"Comedy",lic:"CC BY 3.0",cr:"© Blender Foundation | bigbuckbunny.org",u:"https://peach.blender.org/",v:S("c/c0","Big_Buck_Bunny_4K.webm"),d:"A giant rabbit gets even with three bullying rodents.",c:["#2f5d3a","#a8c66c"]},
- {id:2,t:"Sintel",y:2010,m:15,g:"Fantasy",lic:"CC BY",cr:"© Blender Foundation | sintel.org",u:"https://durian.blender.org/",v:S("f/f1","Sintel_movie_4K.webm"),d:"A young woman searches for the baby dragon she befriended.",c:["#5a2a3b","#e08a5c"]},
- {id:3,t:"Tears of Steel",y:2012,m:12,g:"Sci-Fi",lic:"CC BY 3.0",cr:"(CC) Blender Foundation | tearsofsteel.org",u:"https://mango.blender.org/",v:S("1/10","Tears_of_Steel_in_4k_-_Official_Blender_Foundation_release.webm"),d:"Scientists in Amsterdam try to stop a robot invasion. Live action with CGI.",c:["#12263a","#3a86a8"]},
- {id:4,t:"Elephants Dream",y:2006,m:11,g:"Sci-Fi",lic:"CC BY",cr:"© Blender Foundation | elephantsdream.org",u:"https://orange.blender.org/",v:S("a/a2","Elephants_Dream_%282006%29.webm"),d:"Two men explore a strange machine world. The first open movie.",c:["#3a1f4a","#b36bd0"]},
- {id:5,t:"Cosmos Laundromat",y:2015,m:12,g:"Fantasy",lic:"CC BY",cr:"(CC) Blender Foundation | studio.blender.org",u:"https://studio.blender.org/films/",v:null,d:"A lonely sheep is offered a new life by a mysterious salesman.",c:["#1c2a5a","#f0a04b"]},
- {id:6,t:"Spring",y:2019,m:8,g:"Fantasy",lic:"CC BY 4.0",cr:"(CC) Blender Foundation | studio.blender.org",u:"https://studio.blender.org/films/",v:S("a/a5","Spring_-_Blender_Open_Movie.webm"),d:"A shepherd girl and her dog face the spirits of the mountain.",c:["#2c6b5a","#e8d26b"]}
+ {id:1,t:"Big Buck Bunny",y:2008,m:10,g:"Comedy",lic:"CC BY 3.0",cr:"© Blender Foundation | bigbuckbunny.org",u:"https://peach.blender.org/",v:S("c/c0","Big_Buck_Bunny_4K.webm"),p:"Big_buck_bunny_poster_big.jpg",d:"A giant rabbit gets even with three bullying rodents.",c:["#2f5d3a", "#a8c66c"]},
+ {id:2,t:"Sintel",y:2010,m:15,g:"Fantasy",lic:"CC BY",cr:"© Blender Foundation | sintel.org",u:"https://durian.blender.org/",v:S("f/f1","Sintel_movie_4K.webm"),p:"Sintel_poster.jpg",d:"A young woman searches for the baby dragon she befriended.",c:["#5a2a3b", "#e08a5c"]},
+ {id:3,t:"Tears of Steel",y:2012,m:12,g:"Sci-Fi",lic:"CC BY 3.0",cr:"(CC) Blender Foundation | tearsofsteel.org",u:"https://mango.blender.org/",v:S("1/10","Tears_of_Steel_in_4k_-_Official_Blender_Foundation_release.webm"),p:"Tears_of_Steel_frame_08_4a.jpg",d:"Scientists in Amsterdam try to stop a robot invasion. Live action with CGI.",c:["#12263a", "#3a86a8"]},
+ {id:4,t:"Elephants Dream",y:2006,m:11,g:"Sci-Fi",lic:"CC BY",cr:"© Blender Foundation | elephantsdream.org",u:"https://orange.blender.org/",v:S("a/a2","Elephants_Dream_%282006%29.webm"),p:"",d:"Two men explore a strange machine world. The first open movie.",c:["#3a1f4a", "#b36bd0"]},
+ {id:5,t:"Cosmos Laundromat",y:2015,m:12,g:"Fantasy",lic:"CC BY",cr:"(CC) Blender Foundation | studio.blender.org",u:"https://studio.blender.org/films/",v:null,p:"",d:"A lonely sheep is offered a new life by a mysterious salesman.",c:["#1c2a5a", "#f0a04b"]},
+ {id:6,t:"Spring",y:2019,m:8,g:"Fantasy",lic:"CC BY 4.0",cr:"(CC) Blender Foundation | studio.blender.org",u:"https://studio.blender.org/films/",v:S("a/a5","Spring_-_Blender_Open_Movie.webm"),p:"",d:"A shepherd girl and her dog face the spirits of the mountain.",c:["#2c6b5a", "#e8d26b"]},
+ {id:7,t:"Glass Half",y:2015,m:3,g:"Animation",lic:"CC BY",cr:"(CC) Blender Foundation | studio.blender.org",u:"https://studio.blender.org/films/glass-half/",v:S("0/02","Glass_Half_-_Blender_Open_Movie-full_movie.webm"),p:"",d:"A quick three-minute short from the Blender Institute.",c:["#0f3b4c", "#5fc3c9"]},
+ {id:8,t:"Hero",y:2018,m:4,g:"Animation",lic:"CC BY",cr:"(CC) Blender Foundation | studio.blender.org",u:"https://studio.blender.org/films/",v:S("a/a9","HERO_-_Blender_Open_Movie-full_movie.webm"),p:"",d:"A short animated film from Blender Studio.",c:["#4a2c12", "#e5a04a"]},
+ {id:9,t:"Sprite Fright",y:2021,m:10,g:"Horror",lic:"CC BY 4.0",cr:"(CC) Blender Foundation | studio.blender.org",u:"https://studio.blender.org/films/sprite-fright/",v:S("7/76","Sprite_Fright_-_Blender_Open_Movie-full_movie.webm"),p:"",d:"An 80s-style Halloween horror comedy about woodland sprites.",c:["#2a1038", "#e0523a"]},
+ {id:10,t:"Wing It!",y:2023,m:4,g:"Animation",lic:"CC BY",cr:"(CC) Blender Foundation | studio.blender.org",u:"https://studio.blender.org/films/",v:S("3/38","WING_IT%21_-_Blender_Open_Movie-full_movie.webm"),p:"",d:"A short comedy from Blender Studio with a chicken, a barn, and a rocket.",c:["#1c2e4a", "#f2c14e"]}
 ];
+// STATS: create a free account at goatcounter.com, then put your site code here (for example "reelshelf").
+const GC="";
+if(GC){const sc=document.createElement("script");sc.async=true;sc.dataset.goatcounter="https://"+GC+".goatcounter.com/count";sc.src="https://gc.zgo.at/count.js";document.head.appendChild(sc)}
+function track(f){try{if(GC&&window.goatcounter&&window.goatcounter.count)window.goatcounter.count({path:"play/"+f.t.toLowerCase().replace(/[^a-z0-9]+/g,"-"),title:"Play: "+f.t,event:true})}catch(e){}}
 let saved=new Set(),genre="All",tab="all",term="";
 try{saved=new Set(JSON.parse(localStorage.getItem("reelshelf-site")||"[]"))}catch(e){}
 function persist(){try{localStorage.setItem("reelshelf-site",JSON.stringify([...saved]))}catch(e){}}
@@ -99,10 +111,17 @@ $("#genres").innerHTML=genres.map(g=>`<button class="chip" aria-pressed="${g===g
 $("#genres").onclick=e=>{const b=e.target.closest("[data-g]");if(!b)return;genre=b.dataset.g;
   document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",c.dataset.g===genre));render()};
 $("#q").oninput=e=>{term=e.target.value.trim().toLowerCase();render()};
-function setTab(t){tab=t;$("#t-all").setAttribute("aria-selected",t==="all");$("#t-list").setAttribute("aria-selected",t==="list");render()}
-$("#t-all").onclick=()=>setTab("all");$("#t-list").onclick=()=>setTab("list");
+function setTab(t){tab=t;["all","list","stats"].forEach(k=>$("#t-"+k).setAttribute("aria-selected",k===t));render()}
+$("#t-all").onclick=()=>setTab("all");$("#t-list").onclick=()=>setTab("list");$("#t-stats").onclick=()=>setTab("stats");
 function render(){
   $("#n").textContent=saved.size;
+  if(tab==="stats"){
+    $("#out").className="";
+    $("#out").innerHTML=GC
+      ?`<div class="note" style="margin-top:0"><b>Where people watch from</b><br>Visits are counted with GoatCounter, which uses no cookies and stores no personal data. Open your dashboard and look at the Locations section to see countries. Each Play press is counted as an event named "Play: film title".<br><br><a class="play" style="display:inline-block;padding:10px 18px" href="https://${GC}.goatcounter.com" target="_blank" rel="noopener">Open live stats</a><br><br>Only you can see the dashboard unless you choose to make it public in your GoatCounter settings. Counting starts the day you switch it on.</div>`
+      :`<div class="note" style="margin-top:0"><b>Stats are not switched on yet</b><br>Create a free account at goatcounter.com, pick a site code, then put that code in this file where it says GC. After that, this tab links to your live country stats.</div>`;
+    return;
+  }
   const list=FILMS.filter(f=>(tab==="all"||saved.has(f.id))&&(genre==="All"||f.g===genre)&&f.t.toLowerCase().includes(term));
   if(!list.length){
     $("#out").className="";
@@ -115,6 +134,7 @@ function render(){
   $("#out").innerHTML=list.map(f=>`
    <article class="card">
     <div class="poster" style="background:linear-gradient(160deg,${f.c[0]},${f.c[1]})">
+      ${f.p?`<img class="pimg" alt="" loading="lazy" src="https://commons.wikimedia.org/wiki/Special:FilePath/${f.p}?width=400" onload="this.parentNode.classList.add('has')" onerror="this.remove()">`:""}
       <button class="save" data-id="${f.id}" aria-pressed="${saved.has(f.id)}" aria-label="${saved.has(f.id)?"Remove from":"Add to"} watchlist: ${f.t}">${saved.has(f.id)?"✓":"+"}</button>
       <b>${f.t}</b><span>${f.y}</span>
     </div>
@@ -137,7 +157,7 @@ function openPlayer(f){
   $("#mt").textContent=f.t;
   $("#mc").innerHTML=`${f.cr} · ${f.lic} · <a href="${f.u}" target="_blank" rel="noopener">Official page</a>`;
   $("#me").hidden=true;
-  cur=f; idx=0; vid.src=f.v[0];
+  cur=f; idx=0; vid.src=f.v[0]; track(f);
   $("#modal").classList.add("open");
   vid.play().catch(()=>{});
   $("#close").focus();
