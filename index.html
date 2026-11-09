@@ -1,171 +1,99 @@
-Here is your complete updated file. I've placed your new tracking script right before the closing body tag. Just copy this whole block, replace everything in your editor, and save it.
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reel Shelf</title>
+    <!-- GoatCounter Analytics -->
+    <script data-goatcounter="https://reelshelf.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
     <style>
         :root {
-            --bg-color: #0f1115;
-            --card-bg: #1a1d24;
-            --text-color: #f0f2f5;
-            --text-secondary: #9ca3af;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-secondary: #94a3b8;
             --accent-color: #3b82f6;
             --accent-hover: #2563eb;
-            --border-color: #2d3748;
         }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemItem, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 0;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
-        }
-
-        header {
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
             align-items: center;
         }
-
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
         h1 {
             margin: 0;
-            font-size: 1.5rem;
-            color: var(--text-color);
+            font-size: 2.5rem;
+            letter-spacing: -0.05em;
         }
-
-        .tabs {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .tab-btn {
-            background: none;
-            border: none;
+        p.subtitle {
             color: var(--text-secondary);
-            font-size: 1rem;
-            cursor: pointer;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            transition: all 0.2s;
+            margin-top: 5px;
         }
-
-        .tab-btn.active, .tab-btn:hover {
-            color: var(--text-color);
-            background-color: var(--border-color);
-        }
-
-        main {
-            flex: 1;
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .view-section {
-            display: none;
-        }
-
-        .view-section.active {
-            display: block;
-        }
-
-        .film-grid {
+        .shelf {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
         }
-
         .film-card {
             background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            transition: transform 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease;
         }
-
         .film-card:hover {
             transform: translateY(-4px);
         }
-
-        .poster-container {
+        .film-poster {
             width: 100%;
             height: 160px;
-            background-color: #2d3748;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .poster-container img {
-            width: 100%;
-            height: 100%;
             object-fit: cover;
+            background-color: #334155;
         }
-
         .film-info {
-            padding: 1.25rem;
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            flex: 1;
+            flex-grow: 1;
         }
-
         .film-title {
-            margin: 0 0 0.5rem 0;
-            font-size: 1.15rem;
+            margin: 0 0 8px 0;
+            font-size: 1.25rem;
         }
-
         .film-desc {
             color: var(--text-secondary);
             font-size: 0.9rem;
-            margin: 0 0 1.25rem 0;
-            flex: 1;
+            margin: 0 0 16px 0;
+            flex-grow: 1;
             line-height: 1.4;
         }
-
         .play-btn {
             background-color: var(--accent-color);
             color: white;
             border: none;
-            padding: 0.75rem;
-            border-radius: 4px;
+            padding: 10px 16px;
+            border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
             text-align: center;
             text-decoration: none;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s ease;
         }
-
         .play-btn:hover {
             background-color: var(--accent-hover);
-        }
-
-        .stats-placeholder {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 2rem;
-            border-radius: 8px;
-            text-align: center;
-            color: var(--text-secondary);
-        }
-
-        footer {
-            text-align: center;
-            padding: 1.5rem;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            border-top: 1px solid var(--border-color);
         }
     </style>
 </head>
@@ -173,149 +101,127 @@ Here is your complete updated file. I've placed your new tracking script right b
 
     <header>
         <h1>Reel Shelf</h1>
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('library')">Library</button>
-            <button class="tab-btn" onclick="switchTab('stats')">Stats</button>
-        </div>
+        <p class="subtitle">Your Curated Collection of Open-Source Masterpieces</p>
     </header>
 
-    <main>
-        <!-- Library View -->
-        <div id="library-view" class="view-section active">
-            <div class="film-grid">
-
-                <!-- Spring -->
-                <div class="film-card">
-                    <div class="poster-container" style="background: linear-gradient(135deg, #2e7d32, #1b5e20);"></div>
-                    <div class="film-info">
-                        <h3 class="film-title">Spring</h3>
-                        <p class="film-desc">A shepherd girl and her dog face ancient spirits in a stunning visual journey.</p>
-                        <a href="#" class="play-btn">Play Film</a>
-                    </div>
-                </div>
-
-                <!-- Tears of Steel -->
-                <div class="film-card">
-                    <div class="poster-container">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/21/Tears_of_Steel_poster.jpg" alt="Tears of Steel Poster">
-                    </div>
-                    <div class="film-info">
-                        <h3 class="film-title">Tears of Steel</h3>
-                        <p class="film-desc">A dystopian sci-fi short set in a futuristic Amsterdam grappling with past mistakes.</p>
-                        <a href="#" class="play-btn">Play Film</a>
-                    </div>
-                </div>
-
-                <!-- Elephant Dream -->
-                <div class="film-card">
-                    <div class="poster-container" style="background: linear-gradient(135deg, #d84315, #bf360c);"></div>
-                    <div class="film-info">
-                        <h3 class="film-title">Elephant Dream</h3>
-                        <p class="film-desc">Two men explore an infinite, surreal machine-world of their own making.</p>
-                        <a href="#" class="play-btn">Play Film</a>
-                    </div>
-                </div>
-
-                <!-- Sintel -->
-                <div class="film-card">
-                    <div class="poster-container">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/8/8f/Sintel_poster.jpg" alt="Sintel Poster">
-                    </div>
-                    <div class="film-info">
-                        <h3 class="film-title">Sintel</h3>
-                        <p class="film-desc">A young warrior searches for a baby dragon she befriended and lost.</p>
-                        <a href="#" class="play-btn">Play Film</a>
-                    </div>
-                </div>
-
-                <!-- Big Buck Bunny -->
-                <div class="film-card">
-                    <div class="poster-container">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Big_buck_bunny_poster_big.jpg" alt="Big Buck Bunny Poster">
-                    </div>
-                    <div class="film-info">
-                        <h3 class="film-title">Big Buck Bunny</h3>
-                        <p class="film-desc">A giant rabbit teaches a lesson to a group of mischievous forest creatures.</p>
-                        <a href="#" class="play-btn">Play Film</a>
-                    </div>
-                </div>
-
-                <!-- Glass Half -->
-                <div class="film-card">
-                    <div class="poster-container" style="background: linear-gradient(135deg, #0284c7, #0369a1);"></div>
-                    <div class="film-info">
-                        <h3 class="film-title">Glass Half</h3>
-                        <p class="film-desc">Licensed Blender Open Movie showcasing creative character animation and storytelling.</p>
-                        <a href="#" class="play-btn">Play Film</a>
-                    </div>
-                </div>
-
-                <!-- Hero -->
-                <div class="film-card">
-                    <div class="poster-container" style="background: linear-gradient(135deg, #7c3aed, #6d28d9);"></div>
-                    <div class="film-info">
-                        <h3 class="film-title">Hero</h3>
-                        <p class="film-desc">Blender Open Movie highlighting technical milestones and open-source artistry.</p>
-                        <a href="#" class="play-btn">Play Film</a>
-                    </div>
-                </div>
-
-                <!-- Sprite Fright -->
-                <div class="film-card">
-                    <div class="poster-container" style="background: linear-gradient(135deg, #059669, #047857);"></div>
-                    <div class="film-info">
-                        <h3 class="film-title">Sprite Fright</h3>
-                        <p class="film-desc">A horror-comedy Blender film about unexpecting humans trespassing in nature.</p>
-                        <a href="#" class="play-btn">Play Film</a>
-                    </div>
-                </div>
-
-                <!-- Wing It! -->
-                <div class="film-card">
-                    <div class="poster-container" style="background: linear-gradient(135deg, #d97706, #b45309);"></div>
-                    <div class="film-info">
-                        <h3 class="film-title">Wing It!</h3>
-                        <p class="film-desc">An adventurous Blender Open Movie full of high-flying action and laughs.</p>
-                        <a href="#" class="play-btn">Play Film</a>
-                    </div>
-                </div>
-
+    <div class="shelf">
+        <!-- 1. Big Buck Bunny -->
+        <div class="film-card">
+            <video class="film-poster" controls preload="metadata">
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="film-info">
+                <h3 class="film-title">Big Buck Bunny</h3>
+                <p class="film-desc">A large and lovable rabbit deals with bully forest creatures.</p>
+                <a href="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" target="_blank" class="play-btn">Play Film</a>
             </div>
         </div>
 
-        <!-- Stats View -->
-        <div id="stats-view" class="view-section">
-            <div class="stats-placeholder">
-                <h2>Stats Dashboard</h2>
-                <p>Statistics are currently offline. A tracking code is required to enable analytics.</p>
+        <!-- 2. Elephant Dream -->
+        <div class="film-card">
+            <video class="film-poster" controls preload="metadata">
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="film-info">
+                <h3 class="film-title">Elephant Dream</h3>
+                <p class="film-desc">The world's first open-source movie exploring an infinite machine surreal world.</p>
+                <a href="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" target="_blank" class="play-btn">Play Film</a>
             </div>
         </div>
-    </main>
 
-    <footer>
-        <p>Reel Shelf &bull; Powered by Blender Open Movies</p>
-    </footer>
+        <!-- 3. For Bigger Blazes -->
+        <div class="film-card">
+            <video class="film-poster" controls preload="metadata">
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="film-info">
+                <h3 class="film-title">For Bigger Blazes</h3>
+                <p class="film-desc">Chromecast promotional highlight showcasing stunning visuals.</p>
+                <a href="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" target="_blank" class="play-btn">Play Film</a>
+            </div>
+        </div>
 
-    <script>
-        function switchTab(tabName) {
-            document.querySelectorAll('.view-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+        <!-- 4. For Bigger Escapes -->
+        <div class="film-card">
+            <video class="film-poster" controls preload="metadata">
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="film-info">
+                <h3 class="film-title">For Bigger Escapes</h3>
+                <p class="film-desc">Introducing a new cinematic viewing experience from Google.</p>
+                <a href="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" target="_blank" class="play-btn">Play Film</a>
+            </div>
+        </div>
 
-            if (tabName === 'library') {
-                document.getElementById('library-view').classList.add('active');
-                event.target.classList.add('active');
-            } else if (tabName === 'stats') {
-                document.getElementById('stats-view').classList.add('active');
-                event.target.classList.add('active');
-            }
-        }
-    </script>
-    <script data-goatcounter="https://reelshelf.goatcounter.com/count"
-            async src="//gc.zgo.at/count.js"></script>
+        <!-- 5. For Bigger Fun -->
+        <div class="film-card">
+            <video class="film-poster" controls preload="metadata">
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="film-info">
+                <h3 class="film-title">For Bigger Fun</h3>
+                <p class="film-desc">High-definition entertainment showcasing crisp multimedia rendering.</p>
+                <a href="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" target="_blank" class="play-btn">Play Film</a>
+            </div>
+        </div>
+
+        <!-- 6. For Bigger Joyrides -->
+        <div class="film-card">
+            <video class="film-poster" controls preload="metadata">
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="film-info">
+                <h3 class="film-title">For Bigger Joyrides</h3>
+                <p class="film-desc">Fast-paced test footage optimized for high-speed streaming devices.</p>
+                <a href="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" target="_blank" class="play-btn">Play Film</a>
+            </div>
+        </div>
+
+        <!-- 7. For Bigger Meltdowns -->
+        <div class="film-card">
+            <video class="film-poster" controls preload="metadata">
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="film-info">
+                <h3 class="film-title">For Bigger Meltdowns</h3>
+                <p class="film-desc">Action-packed visual showcase displaying dynamic camera angles.</p>
+                <a href="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4" target="_blank" class="play-btn">Play Film</a>
+            </div>
+        </div>
+
+        <!-- 8. Sintel -->
+        <div class="film-card">
+            <video class="film-poster" controls preload="metadata">
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="film-info">
+                <h3 class="film-title">Sintel</h3>
+                <p class="film-desc">A young warrior searches for a baby dragon she befriended and lost.</p>
+                <a href="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4" target="_blank" class="play-btn">Play Film</a>
+            </div>
+        </div>
+
+        <!-- 9. Subaru Outback Westward Rides -->
+        <div class="film-card">
+            <video class="film-poster" controls preload="metadata">
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackSeeTheWorld.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="film-info">
+                <h3 class="film-title">Subaru Outback</h3>
+                <p class="film-desc">An exploratory journey showcasing scenic outdoor cinematography.</p>
+                <a href="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackSeeTheWorld.mp4" target="_blank" class="play-btn">Play Film</a>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
-
