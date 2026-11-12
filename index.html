@@ -95,6 +95,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 .pbody .pad{padding:0 16px}
 .srv{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 12px}
 .srv button{padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:14px}
+.ext{display:inline-block;margin:0 0 12px;color:var(--accent);font-size:14px;font-weight:700;text-decoration:none}
 .srv button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--ink);font-weight:700}
 </style>
 </head>
@@ -117,7 +118,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
   <div class="pbar"><button class="round" id="pclose" aria-label="Close player">✕</button><h2 id="ptitle"></h2></div>
   <div class="screen" id="screen"></div>
   <div class="pbody">
-    <div class="pad"><div class="srv" id="srv"></div><div class="meta" id="pmeta"></div><p id="pdesc"></p></div>
+    <div class="pad"><div class="srv" id="srv"></div><a class="ext" id="pext" target="_blank" rel="noopener"></a><div class="meta" id="pmeta"></div><p id="pdesc"></p></div>
     <div class="row"><h2>Up next</h2><div class="scroller" id="uprow"></div></div>
   </div>
 </div>
@@ -152,6 +153,20 @@ const FILMS=[
  {id:"fr-drive",t:"Drive",y:1997,m:100,g:"Action",row:"action",d:"A man with a bio-engineered device in his chest that gives him superhuman strength flees to the US, forcing an aspiring songwriter to drive him across California while corporate assassins close in. Starring Mark Dacascos, Kadeem Hardison and Brittany Murphy. A cult-classic martial arts action film directed by Steve Wang.",lic:"Streamed from FilmRise's official YouTube channel",yt:"uDEGZwk_nOI",s:[["yt","uDEGZwk_nOI"]]},
  {id:"fr-mort",t:"Mortuary",y:2005,m:94,g:"Horror",row:"horror",d:"A widow and her kids move into an old funeral home in a small California town, and something buried there won't stay dead. Directed by Tobe Hooper.",lic:"Streamed from FilmRise's official YouTube channel",yt:"Ekfn-RVo8XI",s:[["yt","Ekfn-RVo8XI"]]},
  {id:"fr-run",t:"The Runner",y:1999,m:90,g:"Thriller",row:"horror",d:"A compulsive gambler puts his new family's safety at serious risk after crossing paths with a ruthless gambling boss.",lic:"Streamed from FilmRise's official YouTube channel",yt:"yNB3YmKJh54",s:[["yt","yNB3YmKJh54"]]},
+ {id:"cl-hgf",t:"His Girl Friday",y:1940,m:88,g:"Comedy",row:"classic",d:"A hard-driving newspaper editor uses every trick he knows to stop his star reporter, and ex-wife, from remarrying. Starring Cary Grant and Rosalind Russell; directed by Howard Hawks.",lic:"Public domain · Internet Archive",ia:"HisGirlFriday-1940",s:[["ia","HisGirlFriday-1940"]]},
+ {id:"cl-mcl",t:"McLintock!",y:1963,m:127,g:"Western",row:"classic",d:"A rough-and-tumble cattle baron tries to keep the peace in his frontier town while his estranged wife returns home. Starring John Wayne and Maureen O'Hara.",lic:"Public domain · Internet Archive",ia:"mclintok_widescreen",s:[["ia","mclintok_widescreen"]]},
+ {id:"cl-mga",t:"The Man with the Golden Arm",y:1955,m:119,g:"Drama",row:"classic",d:"A card dealer fresh out of rehab fights to stay clean and become a jazz drummer. Starring Frank Sinatra and Kim Novak; directed by Otto Preminger.",lic:"Public domain · Internet Archive",ia:"the-man-with-the-golden-arm-1955_202405",s:[["ia","the-man-with-the-golden-arm-1955_202405"]]},
+ {id:"cl-rw",t:"Royal Wedding",y:1951,m:93,g:"Musical",row:"classic",d:"A brother-and-sister song-and-dance act travels to London for the royal wedding and both fall in love. Starring Fred Astaire, famous here for dancing on the ceiling, and Jane Powell.",lic:"Public domain · Internet Archive",ia:"royal_wedding",s:[["ia","royal_wedding"]]},
+ {id:"cl-gen",t:"The General",y:1926,m:79,g:"Comedy",row:"classic",d:"When Union spies steal his beloved locomotive with his sweetheart aboard, a Southern engineer gives chase. Buster Keaton's silent comedy masterpiece.",lic:"Public domain · Internet Archive",ia:"The_General_Buster_Keaton",s:[["ia","The_General_Buster_Keaton"]]},
+ {id:"cl-lsh",t:"The Little Shop of Horrors",y:1960,m:73,g:"Comedy",row:"classic",d:"A clumsy florist's assistant raises a strange plant that craves human blood. Roger Corman's cult comedy, with an early Jack Nicholson.",lic:"Public domain · Internet Archive",ia:"The.Little.Shop.of.Horrors.60",s:[["ia","The.Little.Shop.of.Horrors.60"]]},
+ {id:"cl-doa",t:"D.O.A.",y:1950,m:83,g:"Thriller",row:"classic",d:"An accountant learns he has been poisoned and has only hours to find out who killed him. A classic film noir starring Edmond O'Brien.",lic:"Public domain · Internet Archive",ia:"D.o.a.VideoQualityUpgrade",s:[["ia","D.o.a.VideoQualityUpgrade"]]},
+ {id:"cl-det",t:"Detour",y:1945,m:67,g:"Thriller",row:"classic",d:"A nightclub pianist hitchhiking to Los Angeles is pulled into a deadly chain of events. A celebrated film noir directed by Edgar G. Ulmer.",lic:"Public domain · Internet Archive",ia:"Detour",s:[["ia","Detour"]]},
+ {id:"ch-nld",t:"Night of the Living Dead",y:1968,m:96,g:"Horror",row:"chorror",d:"Strangers barricade themselves in a farmhouse as the dead rise and attack. George A. Romero's film that started the modern zombie movie.",lic:"Public domain · Internet Archive",ia:"Night.Of.The.Living.Dead_1080p",s:[["ia","Night.Of.The.Living.Dead_1080p"]]},
+ {id:"ch-lme",t:"The Last Man on Earth",y:1964,m:86,g:"Horror",row:"chorror",d:"After a plague turns humanity into vampire-like creatures, one scientist survives alone. Starring Vincent Price, based on Richard Matheson's I Am Legend.",lic:"Public domain · Internet Archive",ia:"lastmanonearth-1964",s:[["ia","lastmanonearth-1964"]]},
+ {id:"ch-hhh",t:"House on Haunted Hill",y:1959,m:75,g:"Horror",row:"chorror",d:"An eccentric millionaire offers five guests $10,000 each to survive a night in a haunted house. Starring Vincent Price; directed by William Castle.",lic:"Public domain · Internet Archive",ia:"HouseOnHauntedHillWidescreenVideoUpgrade",s:[["ia","HouseOnHauntedHillWidescreenVideoUpgrade"]]},
+ {id:"ch-cos",t:"Carnival of Souls",y:1962,m:83,g:"Horror",row:"chorror",d:"After surviving a car crash, a church organist is haunted by a ghoulish figure and drawn to an abandoned pavilion.",lic:"Public domain · Internet Archive",ia:"CarnivalofSouls",s:[["ia","CarnivalofSouls"]]},
+ {id:"ch-nos",t:"Nosferatu",y:1922,m:94,g:"Horror",row:"chorror",d:"A real estate agent travels to the castle of the sinister Count Orlok, who sets his sights on the agent's wife. F. W. Murnau's silent vampire classic.",lic:"Public domain · Internet Archive",ia:"nosferatu-1922_202504",s:[["ia","nosferatu-1922_202504"]]},
+ {id:"ch-pho",t:"The Phantom of the Opera",y:1925,g:"Horror",row:"chorror",d:"A disfigured genius haunting the Paris Opera House falls for a young singer. Lon Chaney's legendary silent performance.",lic:"Public domain · Internet Archive",ia:"ThePhantomOfTheOpera_364",s:[["ia","ThePhantomOfTheOpera_364"]]},
  {id:"bbb",t:"Big Buck Bunny",y:2008,m:10,g:"Animation",row:"anim",d:"A giant rabbit gets even with three bullying rodents.",lic:"CC BY 3.0 · Blender Foundation",yt:"aqz-KE-bpKQ",s:[["mp4",MP4+"BigBuckBunny.mp4"],["yt","aqz-KE-bpKQ"]]},
  {id:"sin",t:"Sintel",y:2010,m:15,g:"Animation",row:"anim",d:"A young woman searches for the baby dragon she befriended.",lic:"CC BY 3.0 · Blender Foundation",yt:"eRsGyueVLvQ",s:[["mp4",MP4+"Sintel.mp4"],["yt","eRsGyueVLvQ"]]},
  {id:"spr",t:"Spring",y:2019,m:8,g:"Animation",row:"anim",d:"A shepherd girl and her dog face the spirits of the mountain.",lic:"CC BY 4.0 · Blender Foundation",yt:"WhWc3b3KhnY",s:[["yt","WhWc3b3KhnY"],["pt","3d95fb3d-c866-42c8-9db1-fe82f48ccb95"]]},
@@ -159,9 +174,9 @@ const FILMS=[
  {id:"tos",t:"Tears of Steel",y:2012,m:12,g:"Sci-Fi",row:"adv",d:"Scientists in Amsterdam try to stop a robot invasion. Live action with CGI.",lic:"CC BY 3.0 · Blender Foundation",yt:"R6MlUcmOul8",s:[["mp4",MP4+"TearsOfSteel.mp4"],["yt","R6MlUcmOul8"]]},
  {id:"ele",t:"Elephants Dream",y:2006,m:11,g:"Sci-Fi",row:"anim",d:"Two men explore a strange machine world. The very first open movie.",lic:"CC BY 2.5 · Blender Foundation",yt:"TLkA0RELQ1g",s:[["mp4",MP4+"ElephantsDream.mp4"],["yt","TLkA0RELQ1g"]]}
 ];
-const ROWS=[["xmas","Christmas movies"],["action","Action"],["horror","Horror & thrillers"],["drama","Comedy & drama"],["sea","Sea adventures"],["adv","Sci-fi"],["anim","Animated shorts"]];
-const FEATURED=["p01","p07","xm3","ac1","fr-mort","co2","xm1","fr-drive","hr1"];
-const HUES={War:"#2f3a1e",Holiday:"#5a1418",Drama:"#2a3550",Action:"#4a2a10",Thriller:"#2a1f3f",Horror:"#4a1530",Comedy:"#5a4310",Adventure:"#163f3a","Sci-Fi":"#15284a",Animation:"#2f5d3a"};
+const ROWS=[["xmas","Christmas movies"],["classic","Hollywood classics"],["chorror","Classic horror"],["action","Action"],["horror","Horror & thrillers"],["drama","Comedy & drama"],["sea","Sea adventures"],["adv","Sci-fi"],["anim","Animated shorts"]];
+const FEATURED=["cl-mcl","ch-nld","cl-hgf","p01","p07","xm3","ac1","fr-mort","co2","xm1","fr-drive","hr1"];
+const HUES={War:"#2f3a1e",Holiday:"#5a1418",Drama:"#2a3550",Action:"#4a2a10",Thriller:"#2a1f3f",Horror:"#4a1530",Western:"#4a3010",Musical:"#4a1a4a",Comedy:"#5a4310",Adventure:"#163f3a","Sci-Fi":"#15284a",Animation:"#2f5d3a"};
 
 /* ===================== HELPERS ===================== */
 const $=s=>document.querySelector(s);
@@ -170,7 +185,7 @@ const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v)
 const byId=id=>FILMS.find(f=>f.id===id);
 const info=f=>[f.y,f.g,f.m&&f.m+" min"].filter(Boolean).join(" · ");
 function pic(f){ // poster image: YouTube thumbnail or Internet Archive item picture, over a colour fallback
-  const url=`https://i.ytimg.com/vi/${f.yt}/hqdefault.jpg`;
+  const url=f.ia?`https://archive.org/services/img/${f.ia}`:`https://i.ytimg.com/vi/${f.yt}/hqdefault.jpg`;
   return `background-image:url('${url}'),linear-gradient(150deg,${HUES[f.g]||"#2a2240"},#0c0a14)`;
 }
 
@@ -194,7 +209,7 @@ function homeView(){
     <div class="btns"><button class="btn" data-play="${f.id}">▶ Play</button><button class="btn alt" data-save="${f.id}">${list.includes(f.id)?"✓ My List":"＋ My List"}</button></div></div></section>
   <div class="dots">${FEATURED.map((id,i)=>`<button data-hero="${i}" aria-label="Featured ${i+1}" aria-current="${i===heroI}"></button>`).join("")}</div>
   ${rowHTML("Continue watching",cont)}
-  ${rowHTML("New on Reel Shelf",FILMS.filter(f=>f.yt&&f.row!=="anim"&&f.row!=="adv").slice(0,10))}
+  ${rowHTML("New on Reel Shelf",FILMS.filter(f=>f.ia).slice(0,10))}
   ${ROWS.map(([k,t])=>rowHTML(t,FILMS.filter(f=>f.row===k))).join("")}
   ${note()}`;
 }
@@ -214,7 +229,7 @@ function listView(){
   const r=list.map(byId).filter(Boolean);
   return `<div class="page"><h1>My List</h1>${Object.keys(watch).length?`<div class="btns" style="margin-bottom:14px"><button class="btn alt" data-act="clear">Clear watch history</button></div>`:""}${r.length?`<div class="grid">${r.map(tile).join("")}</div>`:`<div class="empty"><b>Your list is empty</b>Tap ＋ My List on any movie to save it here.</div>`}</div>`;
 }
-const note=()=>`<div class="note"><b>Why it's free.</b> Every movie here is shown legally. Feature films play from official distributor YouTube channels, FilmRise and Popcornflix, who own them and earn from the ads. The animated and sci-fi shorts are released by the Blender Foundation under Creative Commons licences.</div>`;
+const note=()=>`<div class="note"><b>Why it's free.</b> Every movie here is shown legally. Feature films play from official distributor YouTube channels, FilmRise and Popcornflix, who own them and earn from the ads. The Hollywood classics and classic horror films are in the public domain and play from the Internet Archive. The animated and sci-fi shorts are released by the Blender Foundation under Creative Commons licences.</div>`;
 function render(){
   const h={home:homeView,search:searchView,list:listView}[view]();
   $("#main").innerHTML=h;
@@ -255,31 +270,39 @@ function openPlayer(id){cur=byId(id);srvIdx=0;
   const same=FILMS.filter(f=>f.id!==id&&f.row===cur.row),other=FILMS.filter(f=>f.id!==id&&f.row!==cur.row);
   $("#uprow").innerHTML=[...same,...other].slice(0,8).map(tile).join("").replaceAll("data-open","data-next");
   const w=watch[id]||{t:0,d:0};w.at=Date.now();watch[id]=w;persist();
-  loadServer();try{history.pushState({p:1},"")}catch(e){}
+  loadServer();
+  // one history entry for the player: reuse the one left by the last ✕, so Back always closes it
+  try{if(history.state&&history.state.p){}else if(spare){history.replaceState({p:1},"");spare=false}else history.pushState({p:1},"")}catch(e){}
 }
 function loadServer(){
   const [type,src]=cur.s[srvIdx],sc=$("#screen");
   $("#srv").innerHTML=cur.s.length>1?cur.s.map((s,i)=>`<button data-srv="${i}" aria-pressed="${i===srvIdx}">Server ${i+1} · ${SRVNAME[s[0]]}</button>`).join(""):"";
+  const ext={yt:["https://www.youtube.com/watch?v="+src,"Not playing? Watch on YouTube ↗"],ia:["https://archive.org/details/"+src,"Not playing? Watch on the Internet Archive ↗"],pt:["https://video.blender.org/w/"+src,"Not playing? Watch on Blender Video ↗"]}[type];
+  const pe=$("#pext");if(ext){pe.href=ext[0];pe.textContent=ext[1];pe.hidden=false}else pe.hidden=true;
   if(type==="mp4"){
     sc.innerHTML=`<video controls autoplay playsinline preload="metadata" src="${src}"></video>`;
     const v=sc.querySelector("video"),w=watch[cur.id];
     v.onloadedmetadata=()=>{if(w&&w.t>30&&w.t<v.duration-20)v.currentTime=w.t};
     let last=0;v.ontimeupdate=()=>{if(Date.now()-last<4000)return;last=Date.now();watch[cur.id]={t:v.currentTime,d:v.duration,at:Date.now()};persist()};
-    v.onerror=()=>{sc.innerHTML=`<div class="perr">This server isn't working right now.${cur.s.length>1?"<br>Try Server 2 below.":""}</div>`};
+    v.onerror=()=>{if(srvIdx<cur.s.length-1){srvIdx++;loadServer();return}
+      sc.innerHTML=`<div class="perr">This video isn't loading right now.<br>Use the link below the player.</div>`};
     v.play&&v.play().catch(()=>{});
   }else if(type==="yt"){
-    sc.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${src}?autoplay=1&rel=0&playsinline=1" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen title="${esc(cur.t)}"></iframe>`;
+    sc.innerHTML=`<iframe src="https://www.youtube.com/embed/${src}?autoplay=1&rel=0&playsinline=1&origin=${encodeURIComponent(location.origin)}" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen title="${esc(cur.t)}"></iframe>`;
   }else if(type==="pt"){
     sc.innerHTML=`<iframe src="https://video.blender.org/videos/embed/${src}?autoplay=1&title=0&warningTitle=0" allow="autoplay; fullscreen" allowfullscreen title="${esc(cur.t)}"></iframe>`;
   }else{
-    sc.innerHTML=`<iframe src="https://archive.org/embed/${src}" allow="autoplay; fullscreen" allowfullscreen webkitallowfullscreen title="${esc(cur.t)}"></iframe>`;
+    sc.innerHTML=`<iframe src="https://archive.org/embed/${src}?autoplay=1" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; fullscreen" allowfullscreen webkitallowfullscreen title="${esc(cur.t)}"></iframe>`;
   }
 }
 function closePlayer(){if($("#player").hidden)return;$("#screen").innerHTML="";$("#player").hidden=true;document.body.classList.remove("lock");cur=null;render()}
 $("#srv").onclick=e=>{const b=e.target.closest("[data-srv]");if(!b)return;srvIdx=+b.dataset.srv;loadServer()};
 $("#uprow").onclick=e=>{const b=e.target.closest("[data-next]");if(!b)return;$("#screen").innerHTML="";openPlayer(b.dataset.next)};
-$("#pclose").onclick=()=>{closePlayer();try{if(history.state&&history.state.p)history.back()}catch(e){}};
-addEventListener("popstate",()=>closePlayer());   // phone back button closes the player
+// ✕ closes straight away and doesn't call history.back(): that "back" arrives late, and on phones it
+// used to shut the next movie the moment it opened. The leftover entry is reused by the next play.
+let spare=false;
+$("#pclose").onclick=()=>{try{if(history.state&&history.state.p){history.replaceState({},"");spare=true}}catch(e){}closePlayer()};
+addEventListener("popstate",()=>{spare=false;closePlayer()});   // phone back button closes the player
 addEventListener("keydown",e=>{if(e.key==="Escape"){if(!$("#player").hidden)$("#pclose").click();else closeSheet()}});
 
 /* ===================== START ===================== */

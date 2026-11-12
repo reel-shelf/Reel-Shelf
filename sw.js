@@ -1,6 +1,6 @@
 // Reel Shelf service worker: lets the app install; videos still need internet.
 // Change VERSION whenever index.html changes, so phones pick up the new page.
-const VERSION = "reelshelf-v2";
+const VERSION = "reelshelf-v3";
 const SHELL = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
 
 self.addEventListener("install", e => {
